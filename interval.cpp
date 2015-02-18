@@ -37,7 +37,8 @@ float Interval::calculateIntersection(Interval *other)
 
     float unionBounds = MAX(max2, max) - MIN(min2, min);
     float sizeSum = other->getSize() + getSize();
-    float intersectionSize = unionBounds - sizeSum;
+    float intersectionSize = MAX(unionBounds - sizeSum, 0);
+
     return intersectionSize;
 }
 

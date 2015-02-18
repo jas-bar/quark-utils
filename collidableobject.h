@@ -10,7 +10,8 @@ private:
     std::vector<Interval> intervals;
 public:
     CollidableObject();
-    std::vector<float> getProjectionVector();
+    std::vector<float> getProjectionVector(CollidableObject* other);
+    Interval getInterval(int axis);
     ~CollidableObject();
 };
 
