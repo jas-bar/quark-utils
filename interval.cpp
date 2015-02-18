@@ -21,6 +21,16 @@ float Interval::getMax()
     return max;
 }
 
+void Interval::setMin(float min)
+{
+    this->min = min;
+}
+
+void Interval::setMax(float max)
+{
+    this->max = max;
+}
+
 float Interval::getSize()
 {
     return max - min;

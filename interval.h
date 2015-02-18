@@ -12,6 +12,8 @@ public:
     Interval(float aMin, float aMax);
     float getMin();
     float getMax();
+    void setMin(float min);
+    void setMax(float max);
     float getSize();
     float calculateIntersection(Interval* other);
     ~Interval();
