@@ -53,7 +53,7 @@ void Collidable3DBox::setMaxY(float v)
 
 float Collidable3DBox::getMinZ()
 {
-    return intervals[ORDER_Z].setMinZ(v);
+    return intervals[ORDER_Z].getMin();
 }
 
 float Collidable3DBox::getMaxZ()

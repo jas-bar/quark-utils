@@ -6,7 +6,7 @@
 
 class CollidableObject
 {
-private:
+protected:
     std::vector<Interval> intervals;
 public:
     CollidableObject();
