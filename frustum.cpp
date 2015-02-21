@@ -1,7 +1,7 @@
 #include "frustum.h"
 
 #include <stdlib.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define POW2(A) A * A
 

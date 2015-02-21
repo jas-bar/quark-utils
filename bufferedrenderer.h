@@ -1,9 +1,9 @@
 #ifndef BUFFEREDRENDERER_H
 #define BUFFEREDRENDERER_H
 
-#include <SDL_opengl.h>
-#include <SDL_opengles.h>
-#include <SDL_opengles2.h>
+#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_opengles.h>
+#include <SDL2/SDL_opengles2.h>
 
 #define BUFFER_SIZE     0x2000000
 #define VERTEX_SIZE     3

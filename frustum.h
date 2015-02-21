@@ -1,7 +1,7 @@
 #ifndef FRUSTUM_H
 #define FRUSTUM_H
 
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 
 class Frustum
 {
