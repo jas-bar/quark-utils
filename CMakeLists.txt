@@ -1,4 +1,4 @@
-project(quark-utils)
+project(quark_utils)
 cmake_minimum_required(VERSION 2.8)
 aux_source_directory(. SRC_LIST)
 
@@ -25,3 +25,8 @@ endif(SDLMAIN_LIBRARY)
 
 include_directories(${INC_DIRS})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION /usr/lib)
+file(GLOB HEADERS . "*.h")
+install(FILES ${HEADERS} DESTINATION /usr/include/quark_utils)
+install(FILES quark_utils.pc DESTINATION /usr/lib/pkgconfig)
