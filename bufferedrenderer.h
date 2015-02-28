@@ -32,6 +32,7 @@ class BufferedRenderer
 private:
     Buffer<GLfloat> vertices, normals, texCoords;
     GLint mode;
+    GLsizei vertexCount;
 public:
     BufferedRenderer(GLint mode);
     ~BufferedRenderer();

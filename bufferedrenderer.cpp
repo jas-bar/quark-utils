@@ -8,6 +8,7 @@ BufferedRenderer::BufferedRenderer(GLint mode) :
     texCoords(Buffer<GLfloat>(BUFFER_SIZE*TEXCOORD_SIZE))
 {
     this->mode = mode;
+    vertexCount = 0;
 }
 
 BufferedRenderer::~BufferedRenderer()
@@ -33,19 +34,19 @@ void BufferedRenderer::reset()
 void BufferedRenderer::draw()
 {
     glBindBuffer(GL_ARRAY_BUFFER, vertices.getBufferID());
-    glVertexPointer(VERTEX_SIZE, GL_FLOAT, QUARK_GL_NULL, QUARK_GL_NULL);
+    glVertexPointer(VERTEX_SIZE, GL_FLOAT, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, normals.getBufferID());
-    glNormalPointer(GL_FLOAT, QUARK_GL_NULL, QUARK_GL_NULL);
+    glNormalPointer(GL_FLOAT, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, texCoords.getBufferID());
-    glTexCoordPointer(TEXCOORD_SIZE, GL_FLOAT, QUARK_GL_NULL, QUARK_GL_NULL);
+    glTexCoordPointer(TEXCOORD_SIZE, GL_FLOAT, 0, 0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    glDrawArrays(mode, 0, vertices.getDataCount());
+    glDrawArrays(mode, 0, vertexCount);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -59,6 +60,7 @@ void BufferedRenderer::addVertex(float x, float y, float z)
     vertices.add(x);
     vertices.add(y);
     vertices.add(z);
+    ++vertexCount;
 }
 
 void BufferedRenderer::addTextureCoord(float x, float y)
