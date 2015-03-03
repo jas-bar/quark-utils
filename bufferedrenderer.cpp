@@ -1,6 +1,17 @@
 #include "bufferedrenderer.h"
-
+#include <cstring>
 #define QUARK_GL_NULL 0
+
+GLuint loadShader(GLenum shaderType, const char* shaderCSTR)
+{
+    const GLint strLen = strlen(shaderCSTR);
+
+    GLuint shaderObject = glCreateShader(shaderType);
+    glShaderSource(shaderObject, 1, &shaderCSTR, &strLen);
+    glCompileShader(shaderObject);
+
+    return shaderObject;
+}
 
 BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions, GLuint shader) :
     vertices(Buffer<GLfloat>(maxVertices * dimensions)),
@@ -12,15 +23,11 @@ BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigne
     dimensionCount = dimensions;
     this->shader = shader;
     if(shader == 0){
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, "attribute vec4 vPosition; void main() { gl_Position = vPosition; }");
-        glCompileShader(vertexShader);
-
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, "precision mediump float; uniform vec4 vColor; void main(){ gl_FragCoolor = vColor;}");
-        glCompileShader(fragmentShader);
+        GLuint vertexShader = loadShader(GL_VERTEX_SHADER, "attribute vec4 vPosition; void main() { gl_Position = vPosition; }");
+        GLuint fragmentShader = loadShader(GL_VERTEX_SHADER, "precision mediump float; uniform vec4 vColor; void main(){ gl_FragCoolor = vColor;}");
 
         shader = glCreateProgram();
+
         glAttachShader(shader, vertexShader);
         glAttachShader(shader, fragmentShader);
         glLinkProgram(shader);
@@ -104,11 +111,13 @@ void BufferedRenderer::draw()
     glVertexAttribPointer(mPositionHandle, dimensionCount, GL_FLOAT, false, dimensionCount*sizeof(GLfloat), vertices.getPointer());
 
     GLint mColorHandle = glGetUniformLocation(shader, "vColor");
-    glUniform4fv(mColorHandle, 1, {1, 0, 0}, 0);
+    glEnableVertexAttribArray(mColorHandle);
+    glVertexAttribPointer(mColorHandle, COLOR_SIZE, GL_FLOAT, false, COLOR_SIZE * sizeof(GLfloat), colors.getPointer());
 
     glDrawArrays(mode, 0, vertices.getDataCount() / dimensionCount);
 
     glDisableVertexAttribArray(mPositionHandle);
+    glDisableVertexAttribArray(mColorHandle);
 }
 #endif
 
