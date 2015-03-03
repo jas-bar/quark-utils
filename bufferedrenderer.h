@@ -6,6 +6,7 @@
 #include <SDL2/SDL_opengles2.h>
 
 #define TEXCOORD_SIZE 2
+#define COLOR_SIZE 4
 
 
 template <class T>
@@ -27,7 +28,7 @@ public:
 class BufferedRenderer
 {
 private:
-    Buffer<GLfloat> vertices, normals, texCoords;
+    Buffer<GLfloat> vertices, normals, texCoords, colors;
     GLint mode;
     GLsizei vertexCount;
     GLuint dimensionCount;
@@ -40,6 +41,7 @@ public:
     void addVertex3D(float x, float y, float z);
     void addTextureCoord(float x, float y);
     void addNormal3D(float x, float y, float z);
+    void addColor(float r, float g, float b, float a);
 };
 
 

@@ -5,7 +5,8 @@
 BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions) :
     vertices(Buffer<GLfloat>(maxVertices * dimensions)),
     normals(Buffer<GLfloat>(maxVertices * dimensions)),
-    texCoords(Buffer<GLfloat>(maxVertices * TEXCOORD_SIZE))
+    texCoords(Buffer<GLfloat>(maxVertices * TEXCOORD_SIZE)),
+    colors(Buffer<GLfloat>(maxVertices * COLOR_SIZE))
 {
     this->mode = mode;
     dimensionCount = dimensions;
@@ -27,6 +28,8 @@ void BufferedRenderer::endEdit()
     glBindBuffer(GL_ARRAY_BUFFER, texCoords.getBufferID());
     glBufferData(GL_ARRAY_BUFFER, texCoords.getDataCount()*sizeof(GLfloat), vertices.getPointer(), GL_STATIC_DRAW);
 
+    glBindBuffer(GL_ARRAY_BUFFER, colors.getBufferID());
+    glBufferData(GL_ARRAY_BUFFER, colors.getDataCount()*sizeof(GLfloat), colors.getPointer(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
@@ -36,6 +39,7 @@ void BufferedRenderer::reset()
     vertices.reset();
     texCoords.reset();
     normals.reset();
+    colors.reset();
 }
 
 void BufferedRenderer::draw()
@@ -50,8 +54,12 @@ void BufferedRenderer::draw()
     glBindBuffer(GL_ARRAY_BUFFER, texCoords.getBufferID());
     glTexCoordPointer(TEXCOORD_SIZE, GL_FLOAT, 0, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, colors.getBufferID());
+    glColorPointer(COLOR_SIZE, GL_FLOAT, 0, 0);
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glDrawArrays(mode, 0, vertices.getDataCount() / dimensionCount);
@@ -59,6 +67,7 @@ void BufferedRenderer::draw()
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
@@ -82,6 +91,14 @@ void BufferedRenderer::addNormal3D(float x, float y, float z)
     normals.add(x);
     normals.add(y);
     normals.add(z);
+}
+
+void BufferedRenderer::addColor(float r, float g, float b, float a)
+{
+    colors.add(r);
+    colors.add(g);
+    colors.add(b);
+    colors.add(a);
 }
 
 
