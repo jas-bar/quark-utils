@@ -5,11 +5,8 @@
 #include <SDL2/SDL_opengles.h>
 #include <SDL2/SDL_opengles2.h>
 
-#define BUFFER_SIZE     0x2000000
-#define VERTEX_SIZE     3
-#define COLOR_SIZE      3
-#define NORMAL_SIZE     3
-#define TEXCOORD_SIZE   2
+#define TEXCOORD_SIZE 2
+
 
 template <class T>
 class Buffer {
@@ -22,7 +19,7 @@ public:
     void add(T newData);
     GLuint getBufferID();
     GLuint getDataCount();
-    void sendData();
+    T* getPointer();
     void reset();
     ~Buffer();
 };
@@ -33,15 +30,16 @@ private:
     Buffer<GLfloat> vertices, normals, texCoords;
     GLint mode;
     GLsizei vertexCount;
+    GLuint dimensionCount;
 public:
-    BufferedRenderer(GLint mode);
+    BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions);
     ~BufferedRenderer();
     void endEdit();
     void reset();
     void draw();
-    void addVertex(float x, float y, float z);
+    void addVertex3D(float x, float y, float z);
     void addTextureCoord(float x, float y);
-    void addNormal(float x, float y, float z);
+    void addNormal3D(float x, float y, float z);
 };
 
 

@@ -2,13 +2,13 @@
 
 #define QUARK_GL_NULL 0
 
-BufferedRenderer::BufferedRenderer(GLint mode) :
-    vertices(Buffer<GLfloat>(BUFFER_SIZE*VERTEX_SIZE)),
-    normals(Buffer<GLfloat>(BUFFER_SIZE*NORMAL_SIZE)),
-    texCoords(Buffer<GLfloat>(BUFFER_SIZE*TEXCOORD_SIZE))
+BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions) :
+    vertices(Buffer<GLfloat>(maxVertices * dimensions)),
+    normals(Buffer<GLfloat>(maxVertices * dimensions)),
+    texCoords(Buffer<GLfloat>(maxVertices * TEXCOORD_SIZE))
 {
     this->mode = mode;
-    vertexCount = 0;
+    dimensionCount = dimensions;
 }
 
 BufferedRenderer::~BufferedRenderer()
@@ -17,9 +17,16 @@ BufferedRenderer::~BufferedRenderer()
 
 void BufferedRenderer::endEdit()
 {
-    vertices.sendData();
-    normals.sendData();
-    texCoords.sendData();
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertices.getBufferID());
+    glBufferData(GL_ARRAY_BUFFER, vertices.getDataCount()*sizeof(GLfloat), vertices.getPointer(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, normals.getBufferID());
+    glBufferData(GL_ARRAY_BUFFER, normals.getDataCount()*sizeof(GLfloat), normals.getPointer(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, texCoords.getBufferID());
+    glBufferData(GL_ARRAY_BUFFER, texCoords.getDataCount()*sizeof(GLfloat), vertices.getPointer(), GL_STATIC_DRAW);
+
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
@@ -33,8 +40,9 @@ void BufferedRenderer::reset()
 
 void BufferedRenderer::draw()
 {
+
     glBindBuffer(GL_ARRAY_BUFFER, vertices.getBufferID());
-    glVertexPointer(VERTEX_SIZE, GL_FLOAT, 0, 0);
+    glVertexPointer(dimensionCount, GL_FLOAT, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, normals.getBufferID());
     glNormalPointer(GL_FLOAT, 0, 0);
@@ -46,7 +54,7 @@ void BufferedRenderer::draw()
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    glDrawArrays(mode, 0, vertexCount);
+    glDrawArrays(mode, 0, vertices.getDataCount() / dimensionCount);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -55,7 +63,7 @@ void BufferedRenderer::draw()
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
 
-void BufferedRenderer::addVertex(float x, float y, float z)
+void BufferedRenderer::addVertex3D(float x, float y, float z)
 {
     vertices.add(x);
     vertices.add(y);
@@ -69,7 +77,7 @@ void BufferedRenderer::addTextureCoord(float x, float y)
     texCoords.add(y);
 }
 
-void BufferedRenderer::addNormal(float x, float y, float z)
+void BufferedRenderer::addNormal3D(float x, float y, float z)
 {
     normals.add(x);
     normals.add(y);
@@ -105,11 +113,17 @@ GLuint Buffer<T>::getDataCount()
 }
 
 template <class T>
+T* Buffer<T>::getPointer()
+{
+    return data;
+}
+
+/*template <class T>
 void Buffer<T>::sendData()
 {
     glBindBuffer(GL_ARRAY_BUFFER, bufferId);
     glBufferData(GL_ARRAY_BUFFER, dataCount*sizeof(T), data, GL_STATIC_DRAW);
-}
+}*/
 
 template <class T>
 void Buffer<T>::reset()
