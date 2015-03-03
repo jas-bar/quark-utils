@@ -7,6 +7,13 @@
 
 #define TEXCOORD_SIZE 2
 
+#ifndef GL_VERSION_2_0
+    #ifdef GL_ES_VERSION_2_0
+        #define GLES
+    #else
+        #error "OpenGL2 or GLES2 are needed for bufferedrenderer"
+    #endif
+#endif
 
 template <class T>
 class Buffer {

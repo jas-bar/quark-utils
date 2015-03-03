@@ -15,6 +15,7 @@ BufferedRenderer::~BufferedRenderer()
 {
 }
 
+#ifndef GLES
 void BufferedRenderer::endEdit()
 {
 
@@ -30,6 +31,7 @@ void BufferedRenderer::endEdit()
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
+#endif
 
 void BufferedRenderer::reset()
 {
@@ -38,6 +40,7 @@ void BufferedRenderer::reset()
     normals.reset();
 }
 
+#ifndef GLES
 void BufferedRenderer::draw()
 {
 
@@ -62,6 +65,7 @@ void BufferedRenderer::draw()
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
+#endif
 
 void BufferedRenderer::addVertex3D(float x, float y, float z)
 {
