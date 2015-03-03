@@ -2,13 +2,28 @@
 
 #define QUARK_GL_NULL 0
 
-BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions) :
+BufferedRenderer::BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions, GLuint shader) :
     vertices(Buffer<GLfloat>(maxVertices * dimensions)),
     normals(Buffer<GLfloat>(maxVertices * dimensions)),
     texCoords(Buffer<GLfloat>(maxVertices * TEXCOORD_SIZE))
 {
     this->mode = mode;
     dimensionCount = dimensions;
+    this->shader = shader;
+    if(shader == 0){
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, "attribute vec4 vPosition; void main() { gl_Position = vPosition; }");
+        glCompileShader(vertexShader);
+
+        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, "precision mediump float; uniform vec4 vColor; void main(){ gl_FragCoolor = vColor;}");
+        glCompileShader(fragmentShader);
+
+        shader = glCreateProgram();
+        glAttachShader(shader, vertexShader);
+        glAttachShader(shader, fragmentShader);
+        glLinkProgram(shader);
+    }
 }
 
 BufferedRenderer::~BufferedRenderer()
@@ -30,6 +45,11 @@ void BufferedRenderer::endEdit()
 
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
+}
+#else
+void BufferedRenderer::endEdit()
+{
+
 }
 #endif
 
@@ -64,6 +84,22 @@ void BufferedRenderer::draw()
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
+}
+#else
+void BufferedRenderer::draw()
+{
+    glUseProgram(shader);
+
+    GLint mPositionHandle = glGetAttribLocation(shader, "vPosition");
+    glEnableVertexAttribArray(mPositionHandle);
+    glVertexAttribPointer(mPositionHandle, dimensionCount, GL_FLOAT, false, dimensionCount*sizeof(GLfloat), vertices.getPointer());
+
+    GLint mColorHandle = glGetUniformLocation(shader, "vColor");
+    glUniform4fv(mColorHandle, 1, {1, 0, 0}, 0);
+
+    glDrawArrays(mode, 0, vertices.getDataCount() / dimensionCount);
+
+    glDisableVertexAttribArray(mPositionHandle);
 }
 #endif
 

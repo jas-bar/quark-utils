@@ -38,8 +38,9 @@ private:
     GLint mode;
     GLsizei vertexCount;
     GLuint dimensionCount;
+    GLuint shader;
 public:
-    BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions);
+    BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions, GLuint shader);
     ~BufferedRenderer();
     void endEdit();
     void reset();
