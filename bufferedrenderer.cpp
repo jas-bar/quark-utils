@@ -18,18 +18,10 @@ BufferedRenderer::~BufferedRenderer()
 
 void BufferedRenderer::endEdit()
 {
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertices.getBufferID());
-    glBufferData(GL_ARRAY_BUFFER, vertices.getDataCount()*sizeof(GLfloat), vertices.getPointer(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, normals.getBufferID());
-    glBufferData(GL_ARRAY_BUFFER, normals.getDataCount()*sizeof(GLfloat), normals.getPointer(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, texCoords.getBufferID());
-    glBufferData(GL_ARRAY_BUFFER, texCoords.getDataCount()*sizeof(GLfloat), vertices.getPointer(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, colors.getBufferID());
-    glBufferData(GL_ARRAY_BUFFER, colors.getDataCount()*sizeof(GLfloat), colors.getPointer(), GL_STATIC_DRAW);
+    vertices.sendData();
+    normals.sendData();
+    texCoords.sendData();
+    colors.sendData();
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
@@ -66,8 +58,8 @@ void BufferedRenderer::draw()
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glBindBuffer(GL_ARRAY_BUFFER, QUARK_GL_NULL);
 }
@@ -135,12 +127,12 @@ T* Buffer<T>::getPointer()
     return data;
 }
 
-/*template <class T>
+template <class T>
 void Buffer<T>::sendData()
 {
     glBindBuffer(GL_ARRAY_BUFFER, bufferId);
     glBufferData(GL_ARRAY_BUFFER, dataCount*sizeof(T), data, GL_STATIC_DRAW);
-}*/
+}
 
 template <class T>
 void Buffer<T>::reset()

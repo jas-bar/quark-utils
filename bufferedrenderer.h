@@ -20,6 +20,7 @@ public:
     void add(T newData);
     GLuint getBufferID();
     GLuint getDataCount();
+    void sendData();
     T* getPointer();
     void reset();
     ~Buffer();
