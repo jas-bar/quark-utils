@@ -66,10 +66,20 @@ void BufferedRenderer::draw()
 
 void BufferedRenderer::addVertex3D(float x, float y, float z)
 {
+    vertexCoord(x);
+    vertexCoord(y);
+    vertexCoord(z);
+}
+
+void BufferedRenderer::addVertex2D(float x, float y)
+{
+    vertexCoord(x);
+    vertexCoord(y);
+}
+
+void BufferedRenderer::vertexCoord(float x)
+{
     vertices.add(x);
-    vertices.add(y);
-    vertices.add(z);
-    ++vertexCount;
 }
 
 void BufferedRenderer::addTextureCoord(float x, float y)

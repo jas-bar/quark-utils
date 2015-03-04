@@ -31,7 +31,6 @@ class BufferedRenderer
 private:
     Buffer<GLfloat> vertices, normals, texCoords, colors;
     GLint mode;
-    GLsizei vertexCount;
     GLuint dimensionCount;
 public:
     BufferedRenderer(GLint mode, unsigned int maxVertices, unsigned int dimensions);
@@ -40,6 +39,8 @@ public:
     void reset();
     void draw();
     void addVertex3D(float x, float y, float z);
+    void addVertex2D(float x, float y);
+    void vertexCoord(float x);
     void addTextureCoord(float x, float y);
     void addNormal3D(float x, float y, float z);
     void addColor(float r, float g, float b, float a);
