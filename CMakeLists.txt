@@ -30,4 +30,6 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 file(GLOB HEADERS . "*.h")
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/quark_utils)
-configure_file(quark_utils.pc ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+
+configure_file(quark_utils.pc.in ../quark_utils.pc)
+install(FILES quark_utils.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/)
